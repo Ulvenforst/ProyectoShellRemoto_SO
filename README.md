@@ -3,7 +3,7 @@
 En este repositorio se encuentran algunos códigos en C que pueden servir de apoyo al desarrollo de un shell remoto que sigue el esquema cliente/servidor. 
 La siguiente gráfica muestra lo que se espera sea la interacción entre el shell cliente y el servidor. 
 
-<img src="tools/figures/MiniShellRemoto.png" alt="Mini Shell Remoto Cliente/Servidor" width="650"/>
+<img src="figures/MiniShellRemoto.png" alt="Mini Shell Remoto Cliente/Servidor" width="650"/>
 
 Al lado derecho de la gráfica se observa el servidor quien está esperando por peticiones de un cliente.
 Este servidor espera recibir comandos a través de la red de parte de un proceso cliente.
