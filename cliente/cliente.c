@@ -17,10 +17,12 @@ Licencia: GPL-3.0
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
 #include "../tools/tcp.h"
 #include "../tools/leercadena.h"
+#include <sys/wait.h>
 
 #define MIN_PORT 1025
 #define MAX_PORT 65535
@@ -86,6 +88,23 @@ void interactuar_con_servidor(int sockfd) {
             break;
         }
 
-        TCP_Write_String(sockfd, cmd); // Enviar comando al servidor
+        // se crea un nuevo proceso para enviar el comando al servidor
+        pid_t pid = fork();
+        if (pid < 0) {
+            fprintf(stderr, "Fork failed");
+            exit(EXIT_FAILURE);
+        }
+        // Proceso hijo
+        if (pid == 0) { 
+            // Envia el comando al servidor
+            TCP_Write_String(sockfd, cmd);
+            printf(":)");
+            exit(EXIT_SUCCESS);
+        } 
+        else //proceso padre
+        {  
+            // Esperar a que el proceso hijo termine
+            wait(NULL);
+        }
     }
 }

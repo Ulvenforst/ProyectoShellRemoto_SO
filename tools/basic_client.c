@@ -12,7 +12,7 @@ void func(int sockfd)
 int main(int argc, char* argv[]) 
 { 
 	int sockfd, port; 
-	char *host;
+	char *host;		
 
 	if (argc != 3) {
 		printf("Uso: %s <host> <puerto>\n",argv[0]);
