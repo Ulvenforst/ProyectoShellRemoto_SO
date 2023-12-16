@@ -2,9 +2,9 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <arpa/inet.h>
-#include <netdb.h> 
-#include <netinet/in.h> 
-#include <netinet/tcp.h> 
+#include <netdb.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <stdlib.h>
 #include <string.h> 
 #include <sys/socket.h>
@@ -14,7 +14,7 @@
 #include "tcp.h"
 
 int TCP_Open(char *hostname, t_port port) {
-  return TCP_Open_By_IP(Get_IP(hostname),port);
+	return TCP_Open_By_IP(Get_IP(hostname),port);
 }
 
 // Esta es la funcion que usa un cliente para conectarse a un 
@@ -195,11 +195,11 @@ char *Get_IP(char *hostname) {
 }
 
 int Send_ACK(t_socket socket) {
-  TCP_Write_String(socket,TCP_ACK);
+	TCP_Write_String(socket,TCP_ACK);
 }
 
 int Recv_ACK(t_socket socket) {
-  char ack[MAX_TCP_ACK] = {0};
-  TCP_Read_String(socket,ack,MAX_TCP_ACK);
-  return !strcmp(ack,TCP_ACK);
+	char ack[MAX_TCP_ACK] = {0};
+	TCP_Read_String(socket,ack,MAX_TCP_ACK);
+	return !strcmp(ack,TCP_ACK);
 }
