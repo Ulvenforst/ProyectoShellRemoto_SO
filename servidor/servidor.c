@@ -85,12 +85,15 @@ void manejar_cliente(int connfd)
 
         // Leer mensaje del cliente
         int n = TCP_Read_String(connfd, buff, BUFSIZ);
+
         if (n <= 0)
         {
             printf("Cliente desconectado o error de lectura.\n");
             break;
         }
         printf("Comando recibido del cliente: %s\n", buff);
+
+        Send_ACK(connfd);
 
         // Se crea un nuevo proceso para ejecutar el comando recibido
         pid_t pid = fork();
