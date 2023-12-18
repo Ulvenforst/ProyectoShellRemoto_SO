@@ -22,6 +22,7 @@ Licencia: GPL-3.0
 #include <string.h>
 #include "../tools/tcp.h"
 #include "../tools/leercadena.h"
+#include "../tools/archivo.h"
 #include <sys/wait.h>
 
 #define MIN_PORT 1025
@@ -78,13 +79,13 @@ int establecer_conexion(char *host, t_port port) {
 void interactuar_con_servidor(int sockfd) {
   char cmd[BUFSIZ];
 
-  printf("Conectado al servidor. Escribe 'salir' para terminar.\n");
+  printf("Conectado al servidor. Escribe 'salida' para terminar.\n");
   while(1) {
     printf("> ");
     fflush(stdout);
     leer_de_teclado(BUFSIZ, cmd);
 
-    if (strcmp(cmd, "salir") == 0) {
+    if (strcmp(cmd, "salida") == 0) {
       break;
     }
 
@@ -100,11 +101,13 @@ void interactuar_con_servidor(int sockfd) {
     } else {  // Proceso padre
       int status;
       waitpid(pid, &status, 0);
-      // Leer la respuesta del servidor
-      char respuesta[BUFSIZ];
-      bzero(respuesta, BUFSIZ);
-      TCP_Read_String(sockfd, respuesta, BUFSIZ);
-      printf("%s\n", respuesta);
+
+      // Recibir el nombre del archivo con la salida del comando
+      TCP_Recv_File(sockfd, "ejecucion");
+
+      // Mostrar contenido del archivo
+      cat_archivo("ejecucion"); 
+      borrar_archivo("ejecucion");
     }
   }
 }

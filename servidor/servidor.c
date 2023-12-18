@@ -20,6 +20,7 @@ Licencia: GPL-3.0
 #include <unistd.h>
 #include "../tools/tcp.h"
 #include "../tools/leercadena.h"
+#include "../tools/archivo.h"
 #include <sys/wait.h>
 
 #define MIN_PORT 1025
@@ -76,42 +77,47 @@ int iniciar_servidor(t_port port)
 
 void manejar_cliente(int connfd) {
   char buff[BUFSIZ];
+  char comando[BUFSIZ + FILENAMELENGTH + 10];
 
   printf("Esperando comandos del cliente...\n");
   while (1) {
     bzero(buff, BUFSIZ);
-
     int n = TCP_Read_String(connfd, buff, BUFSIZ);
+    Send_ACK(connfd);
 
     if (n <= 0) {
       printf("Cliente desconectado o error de lectura.\n");
       break;
     }
-    printf("Comando recibido del cliente: %s\n", buff);
 
-    Send_ACK(connfd);
+    printf("Comando recibido del cliente: %s\n", buff);
 
     pid_t pid = fork();
     if (pid < 0) {
       fprintf(stderr, "Fork failed");
       exit(EXIT_FAILURE);
     }
-    if (pid == 0) {
-      char **vector = de_cadena_a_vector(buff);
+    if (pid == 0) { // Proceso hijo
+      sprintf(comando, "%s > ejecucion", buff);
+      system(comando);
 
-      dup2(connfd, STDERR_FILENO);
-      dup2(connfd, STDOUT_FILENO);
+      FILE *archivo = fopen("ejecucion", "r");
+      if (archivo == NULL) {
+        perror("Error al abrir el archivo");
+        return;
+      }
 
-      execvp(vector[0], vector);
-      fprintf(stderr, "Error al ejecutar '%s'\n", buff);
-      exit(EXIT_FAILURE);
-    } else {
+      // Verifica si el archivo está vacío
+      fseek(archivo, 0, SEEK_END); 
+      if (ftell(archivo) == 0) {
+        system(buff);
+      }
+
+      TCP_Send_File(connfd, "ejecucion");
+      borrar_archivo("ejecucion");
+      exit(EXIT_SUCCESS);
+    } else { // Proceso padre
       wait(NULL);
-    }
-
-    if (strcmp(buff, "salir") == 0) {
-      printf("Comando para terminar la conexión recibido.\n");
-      break;
     }
   }
 }
