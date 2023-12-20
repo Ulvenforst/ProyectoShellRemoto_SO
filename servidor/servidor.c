@@ -4,7 +4,7 @@ Autor: Juan Camilo Narváez Tascón <juan.narvaez.tascon@correounivalle.edu.co>
        Juan Esteban Clavijo García <juan.esteban.clavijo@correounivalle.edu.co>
        Óscar David Cuaical <cuaical.oscar@correounivalle.edu.co>
 Fecha creación: 14-12-23
-Fecha última modificación: 14-12-23
+Fecha última modificación: 18-12-23
 Licencia: GPL-3.0
 */
 
